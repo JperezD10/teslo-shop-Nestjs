@@ -40,7 +40,6 @@ export class ProductsService {
   }
 
   async findOne(term: string):Promise<Product> {
-    try {
       let product: Product = null;
       
       if(isUUID(term))
@@ -56,24 +55,17 @@ export class ProductsService {
         throw new NotFoundException(`Product ${term} not found`);
       
       return product;
-    } catch (error) {
-      this.handleDbException(error);
-    }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
-    try {
-      const product = await this.productRepository.preload({
-        id: id,
-        ...updateProductDto
-      });
-      if(!product) throw new NotFoundException(`Product with id ${id} doesn't exist`);
-  
-      await this.productRepository.save(product);
-      return product;
-    } catch (error) {
-      this.handleDbException(error);
-    }
+    const product = await this.productRepository.preload({
+      id: id,
+      ...updateProductDto
+    });
+    if(!product) throw new NotFoundException(`Product with id ${id} doesn't exist`);
+
+    await this.productRepository.save(product);
+    return product;
   }
 
   async remove(id: string): Promise<string> {
