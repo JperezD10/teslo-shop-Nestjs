@@ -4,6 +4,10 @@ import { CreateUserDto, LoginDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorators/get-user.decorator';
 import { User } from './entities/user.entity';
+import { UserRoleGuard } from './guards/user-role.guard';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { ValidRoles } from './interfaces';
+import { Auth } from './decorators';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +24,21 @@ export class AuthController {
   }
 
   @Get('private')
-  @UseGuards(AuthGuard())
+  @RoleProtected(ValidRoles.user)
+  @UseGuards(AuthGuard(), UserRoleGuard)
   testToken(
+    @GetUser() user: User
+  ){
+    return {
+      ok: true,
+      message: 'You can enter',
+      user
+    }
+  }
+
+  @Get('private2')
+  @Auth(ValidRoles.superUser, ValidRoles.user)
+  testAuth(
     @GetUser() user: User
   ){
     return {
