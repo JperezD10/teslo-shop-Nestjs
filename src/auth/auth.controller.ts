@@ -48,4 +48,12 @@ export class AuthController {
     }
   }
 
+  @Get('check-status')
+  @Auth()
+  async cheackAuthStatus(
+    @GetUser() user:User
+  ){
+    return await this.authService.checkAuthStatus(user);
+  }
+
 }

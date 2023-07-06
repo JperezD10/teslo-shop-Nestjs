@@ -49,6 +49,14 @@ export class AuthService {
       token: this.getJwtToken({id: user.id})
     };
   }
+  
+  async checkAuthStatus(user: User){
+
+    return {
+      ...user,
+      token: this.getJwtToken({id: user.id})
+    };
+  }
 
   private getJwtToken(payload: JwtPayload){
    return this.jwtService.sign(payload); 
@@ -60,4 +68,5 @@ export class AuthService {
     console.error(error)
     throw new InternalServerErrorException('An error happened. Please talk with admins')
   }
+
 }

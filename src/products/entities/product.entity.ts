@@ -1,5 +1,6 @@
+import { User } from "src/auth/entities/user.entity";
 import { EntityModel } from "src/common/models/entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
 export class Product extends EntityModel {
@@ -36,6 +37,13 @@ export class Product extends EntityModel {
 
     @Column('text')
     gender:string;
+
+    @ManyToOne(
+        () => User,
+        (user) => user.product,
+        {eager: true}
+    )
+    user: User
 
     @BeforeInsert()
     checkSlugInsert(){

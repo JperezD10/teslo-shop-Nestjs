@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { PaginationDto } from 'src/common/DTOs/pagination.dto';
 import { isUUID } from 'class-validator';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -16,9 +17,12 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
   ){}
   
-  async create(createProductDto: CreateProductDto):Promise<Product> {
+  async create(createProductDto: CreateProductDto, user:User):Promise<Product> {
     try {
-      const product = this.productRepository.create(createProductDto);
+      const product = this.productRepository.create({
+        ...createProductDto,
+        user
+      });
       await this.productRepository.save(product);
 
       return product;

@@ -1,5 +1,6 @@
 import { EntityModel } from "src/common/models/entity";
-import { Column, Entity } from "typeorm";
+import { Product } from "src/products/entities/product.entity";
+import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity()
 export class User extends EntityModel {
@@ -27,4 +28,10 @@ export class User extends EntityModel {
         default: ['user']
     })
     roles: string[];
+
+    @OneToMany(
+        () => Product,
+        (product) => product.user
+    )
+    product: Product;
 }
